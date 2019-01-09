@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title>Voronoi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="./css/mapstyle.css" />
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
+<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+<style type="text/css">
+
+body {
+    font-family: sans-serif;
+}
+
+</style>
+</head>
+
+<body>
+<div id="mapWrap">
+    <div class="column left">
+        <h2>Using Voronoi polygons in Mapbox for easier point selection</h2>
+        <p>Borrowing the <a href="https://bl.ocks.org/mbostock/8033015">same technique used by Mike Bostock</a> for improved mouseover interactions in d3 charts, it is possible to draw Voronoi polygons using <a href="http://turfjs.org/" target="blank">Turf.js</a> and select the attributes of the points within.</p>
+        <div id="removeVoronoi">Hide Voronoi</div>
+    </div>
+    <div class="column right">
+        <div id="map"></div>
+    </div>
+</div>
+<div class="credit">
+    <p>Data: <a href="http://data.torontopolice.on.ca/datasets/9f05c21dea4c40458264cb3f1e2362b8_0" target="_blank">Toronto Police Service</a></p>
+    <p>By: <a href="http://www.mapto.ca/" target="_blank">MapTO</a></p>
+    <p>Code: <a href="" target="_blank">Github</a></p>
+</div>
+
+<script src="./js/voronoihover.js"></script>
+<script>
+
+document.getElementById("removeVoronoi").addEventListener("click", displayVoronoi);
+
+
+////////////////////////////////////////////////////////////////////////////////////// 
+// make sure your bounds contain the entire point layer.                            //
+// On map load it will generate the Voronoi polygons based on the data within view. //
+//////////////////////////////////////////////////////////////////////////////////////
+
+var mapBounds = [[-79.6453857421875, 43.54854811091286],[-79.10224914550781, 43.887995955026405]];
+
+var popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false
+    });
+
+
+// please use your own token!
+mapboxgl.accessToken = 'pk.eyJ1Ijoid2lsbGlhbWJlbmRhdmlzIiwiYSI6IlVrb3BGVzQifQ.jeHxDCnpXXvAXKfAFEYG-A';
+
+
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/light-v9',
+    center: [-79.37, 43.72],
+    maxBounds: mapBounds
+});
+
+
+map.on('load', function() {
+
+    // load your geojson
+    map.addSource('points', {
+      type: 'geojson',
+      data: './data/points.json'
+    });
+
+
+    // add the points data as circle type
+    map.addLayer({
+        'id': 'pointsLayer',
+        'type': 'circle',
+        'source': 'points',
+        'sourceLayer': 'pointsLayer',
+        'paint': {
+            'circle-radius': 2,
+            'circle-color': '#000'
+        }
+    });
+
+    // wait for map to render fully
+    map.on('render', styleLoaded);
+
+ 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Declare the data attribute names you want in the popups. Need to match geojson property field names. //
+    // must include a unique ID field. Unique ID field must be an integer.                                  //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    var dataNames = ["id", "YEAR", "STREET1", "STREET2"];
+
+    function styleLoaded () {
+      if (map.loaded()) {
+        console.log('map loaded');
+
+        queryMap(dataNames);
+
+        map.off('render', styleLoaded); 
+      }
+    }
+
+});
+
+
+// btn function
+function displayVoronoi() {
+    if (voronoiShown == true) {
+        document.getElementById('removeVoronoi').innerHTML = "Show Voronoi";
+        voronoiShown = false;
+        map.setPaintProperty('voronoiPolygonLayer', 'fill-opacity', 0);
+    } else {
+        voronoiShown = true;
+        document.getElementById('removeVoronoi').innerHTML = "Hide Voronoi"
+        map.setPaintProperty('voronoiPolygonLayer', 'fill-opacity', 1);
+    }
+}
+
+
+</script>
+</body>
+</html>

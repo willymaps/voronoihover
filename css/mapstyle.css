@@ -1,0 +1,104 @@
+<style>
+
+#mapWrap, .credit {
+    width:100%;
+    display: block;
+    font-family: sans-serif;
+    color:#555;
+    max-width:1400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.credit {
+    line-height: 6px;
+    font-size: 12px;
+    margin-top:20px;
+    color:#888;
+}
+
+.credit a {
+    text-decoration:none;
+    color: coral;
+}
+
+#mapWrap h2 {
+    color:#111;
+}
+
+#removeVoronoi {
+    width:80%;
+    padding:15px;
+    border:1px solid #d3d3d3;
+    border-radius:3px;
+    text-align: center;
+    -webkit-box-shadow: 3px 3px 13px 1px rgba(211,211,211,0.1);
+    -moz-box-shadow: 3px 3px 13px 1px rgba(211,211,211,0.1);
+    box-shadow: 3px 3px 13px 1px rgba(211,211,211,0.1);
+}
+
+#removeVoronoi:hover {
+    border:1px solid coral;
+    cursor: pointer;
+}
+
+#map {
+    width:100%;
+    height:100%;
+}
+
+
+.mapboxgl-popup {
+    max-width: 400px;
+    font-size: 10px;
+    font-family: sans-serif;
+}
+
+.mapboxgl-popup-content {
+    pointer-events: none !important;
+    padding:12px;
+}
+
+.column {
+    float: left;
+    height:600px;
+}
+
+.left {
+    width: 23%;
+    padding: 0 1%;
+}
+
+.right {
+    width: 75%;
+}
+
+
+@media (max-width:1000px) {
+    .column {
+        float:none;
+        display:block;
+    }
+
+    .left {
+        width: 100%;
+        text-align: left;
+        display: block;
+        height: 100%;
+        padding-bottom: 20px;
+    }
+
+    .right {
+        width:100%;
+        height:400px;
+        /* margin:auto; */
+    }
+
+    #removeVoronoi {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+}
+
+</style>
